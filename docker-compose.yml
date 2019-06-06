@@ -1,0 +1,32 @@
+###############################################################################
+#                          Generated on phpdocker.io                          #
+###############################################################################
+version: "3.1"
+services:
+
+    memcached:
+      image: memcached:alpine
+      container_name: laravel-memcached
+
+    redis:
+      image: redis:alpine
+      container_name: laravel-redis
+
+    webserver:
+      image: nginx:alpine
+      container_name: laravel-webserver
+      working_dir: /application
+      volumes:
+          - ./Aplicacao:/application
+          - ./phpdocker/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      ports:
+       - "10100:80"
+
+    php-fpm:
+      build: phpdocker/php-fpm
+      container_name: laravel-php-fpm
+      working_dir: /application
+      volumes:
+        - ./Aplicacao:/application
+        - ./phpdocker/php-fpm/php-ini-overrides.ini:/etc/php/7.3/fpm/conf.d/99-overrides.ini
+
